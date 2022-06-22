@@ -253,52 +253,14 @@ class Application:
         menu.show()
         selection = menu.selected_option
         try:
-            dash = 50 * "-"
-            tournament_to_resume = selected_tournaments[selection]
-            tournament_processor = TournamentProcessor(self, tournament_to_resume)
-            for round_ in tournament_to_resume.rounds:
-                for result in round_.results:
-                    [name, score] = result
-                    for player in tournament_to_resume.players:
-                        if player.name == name:
-                            player.score += score
-            for round_ in tournament_to_resume.rounds:
-                if len(round_.results) != len(
-                    tournament_to_resume.players
-                ) or (
-                    len(round_.results) == 0 and round_.round_name is not None
-                ):
-                    print("Reprise au round : {}".format(round_.round_name))
-                    for match in round_.match_list:
-                        print(dash)
-                        print(
-                            "{:^13}{:^13}{:^13}".format(
-                                match.player1.name,
-                                "s'oppose à",
-                                match.player2.name,
-                            )
-                        )
-                    print(dash, "\n")
-                    exit_yor = round_.end()
-                    self.model.delete_tournament(tournament_to_resume)
-                    self._save_current_tournament(tournament_processor.get_serialized_tournament())
-                    if exit_yor == "exit":
-                        exit()
-                    else:
-                        tournament_to_resume.turn += 1
-                        tournament_processor.process()
-                elif (
-                    len(tournament_to_resume.rounds)
-                    != tournament_to_resume.round_count
-                    and round_ == tournament_to_resume.rounds[-1]
-                ):
-                    if len(round_.results) < len(tournament_to_resume.players):
-                        round_.end()
-                    else:
-                        tournament_to_resume.process(self._players)
+            tournament_processor = TournamentProcessor(
+                self, selected_tournaments[selection]
+            )
         except IndexError:
-            pass
-
+            print("Mauvais choix ")
+        else:
+            tournament_processor.process()
+            
     def _load_players(self):
         """Charge tout les joueurs vers la liste "players"
         depuis la base de données."""

@@ -8,6 +8,20 @@ class TournamentProcessor:
     def __init__(self, controller, tournament):
         self._controller = controller
         self._tournament = tournament
+        
+        if self._tournament.turn > 1:
+            self._reload_tournament()
+            
+    def _reload_tournament(self):
+        for round_ in self._tournament.rounds:
+            for result in round_.results:
+                [name, score] = result
+                for player in self._tournament.players:
+                    if player.name == name:
+                        player.score += score
+        print("--- Résumé du tournois en cours : ---")
+        self.rounds_score()
+        print()
 
     def conditions_duo(self, player1, player2, round_):
         """Conditions à remplir pour que 2 joueurs soient appariés"""
@@ -142,14 +156,7 @@ class TournamentProcessor:
 
             # On ajoute la ronde au tournois
             self._tournament.rounds.append(roundx)
-        shall_exit = input("Voulez-vous continuer ? (O/N)\n")
-        if shall_exit.lower() == "n":   
-            self._controller.del_tournament(self._tournament)
-            self.save_tournament()
-            raise SystemExit(0)  # Not good.
             
-        
-
     def display_opponents(self, player1, player2):
         print(
             "{:^11s} {:<11s}     s'oppose à {:^11s} {:<11s}".format(
@@ -213,30 +220,31 @@ class TournamentProcessor:
             self._tournament.turn != self._tournament.round_count + 1
             and self._tournament.turn != len(players)
         ):
-            if self._tournament.turn == 1:
-                self.switzerland()
-                exit_yorn = self._tournament.rounds[0].end()
-            else:
-                self.switzerland()
-                exit_yorn = self._tournament.rounds[
-                    self._tournament.turn - 1
-                ].end()
-            if exit_yorn == "exit":
-                self._controller.del_tournament(self._tournament)
-                self.save_tournament()
-                raise SystemExit(0)  # Should not be here.
-
-                # Nombre d'appariements max pour un nombre de personne
-                # Pour 4 : (4*3)/2 = 6 couples possibles
+            self.switzerland()
+            self._tournament.rounds[
+                self._tournament.turn - 1
+            ].end()
+            self._tournament.turn += 1 #Increnetation du tour suivant
+            
+            if self._tournament.turn > self._tournament.round_count:
+                return
+            
+            # On affiche le tableau des scores
+            self.rounds_score()
+            
+            # Nombre d'appariements max pour un nombre de personne
+            # Pour 4 : (4*3)/2 = 6 couples possibles
             if (
                 len(self._tournament.opponents)
                 == (len(players) * (len(players) - 1)) / 2
             ):
                 break
 
-            self._tournament.turn += 1
-            # On affiche le tableau des scores
-            self.rounds_score()
+            shall_exit = input("Voulez-vous continuer ? (O/N)\n")
+            if shall_exit.lower() == "n":   
+                self._controller.del_tournament(self._tournament)
+                self.save_tournament()
+                raise SystemExit(0)  # Not good
 
     def _end_tournament(self):
         """Messages et affichage de fin de tournois"""

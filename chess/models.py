@@ -87,27 +87,6 @@ class Round:
         self.results = results or []
         self.round_name = round_name
 
-    def start(self):
-        print('Heure de début de ronde : {}'.format(self.time_start))
-
-    def end(self):
-        """Demande le résultat de tout les matchs de la ronde actuelle"""
-        input("Appuyez sur une entrée pour rentrer les résultats...\n")
-        for match in self.match_list:
-            already_played = False
-            for result in self.results:
-                [name, score] = result
-                if name == match.player1.name or name == match.player2.name:
-                    already_played = True
-            if not already_played:
-                (result_1, result_2) = match.result()
-                if result_1 == -1:
-                    return "exit"
-                self.results.append([match.player1.name, result_1])
-                self.results.append([match.player2.name, result_2])
-        self.time_end = time.strftime("%H:%M")
-        print("Heure de fin de ronde : {}".format(self.time_end))
-
 
 class Match:
     """

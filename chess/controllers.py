@@ -1,3 +1,5 @@
+import random
+
 from .models import Model, Player, Tournament, Match, Round
 from .processors import TournamentProcessor
 from .views import View
@@ -118,7 +120,7 @@ class Application:
             print("Trop peu de gens pour faire un tournois...")
             input()
             self._display_console_menu()
-        print("Vous pouvez quitter à tout moment en tappant exit \n")
+        print("Vous pouvez quitter à tout moment en tapant exit \n")
         while True:
             try:
                 possible_rounds_count = len(self._players) - 1
@@ -140,20 +142,27 @@ class Application:
                 date = str(input("Date du tournois \n"))
                 if date == "":
                     raise ValueError
-                cadence = str(input("Cadence du tournois\n"))
+                cadence = str(input\
+                    ("Cadence du tournois : Blitz / Bullet / Coup rapide\n"))
                 if cadence == "":
                     raise ValueError
                 description = str(input("Description du tournois\n"))
                 break
             except ValueError:
                 print("Réponse non valide")
+        # Test n/bre joueurs pair -1 si impair  
+        if len(self._players) % 2:
+            players_test_pair = random.sample(self._players, len(self._players))[:-1]
+        else:
+            players_test_pair = self._players
+               
         tournament = Tournament(
             name,
             place,
             date,
             cadence,
             description,
-            players=self._players,
+            players=players_test_pair,
             rounds=[],
             round_count=nb_round,
         )

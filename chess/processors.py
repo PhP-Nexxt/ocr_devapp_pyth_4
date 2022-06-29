@@ -49,7 +49,8 @@ class TournamentProcessor:
         if self._tournament.turn == 1:
             
             round0 = Round(round_name=name, match_list=[], results=[])
-            round0.start()
+            round_processor = RoundProcessor(round0)
+            round_processor.start()
             self._tournament.players = sorted(
                 self._tournament.players,
                 key=attrgetter("ranking"),
@@ -78,12 +79,14 @@ class TournamentProcessor:
             # On ajoute la ronde au tournois
             self._tournament.rounds.append(round0)
             print(dash)
+            round_processor.end()
 
         else:
             # Si ce n'est pas la première ronde,
             # on trie et on apparie
             roundx = Round(round_name=name, match_list=[], results=[])
-            roundx.start()
+            round_processor = RoundProcessor(roundx)
+            round_processor.start()
             
             self._tournament.players = sorted(
                 self._tournament.players,
@@ -156,6 +159,7 @@ class TournamentProcessor:
 
             # On ajoute la ronde au tournois
             self._tournament.rounds.append(roundx)
+            round_processor.end()
             
     def display_opponents(self, player1, player2):
         print(
@@ -221,9 +225,7 @@ class TournamentProcessor:
             and self._tournament.turn != len(players)
         ):
             self.switzerland()
-            self._tournament.rounds[
-                self._tournament.turn - 1
-            ].end()
+
             self._tournament.turn += 1 #Increnetation du tour suivant
             
             if self._tournament.turn > self._tournament.round_count:
@@ -349,9 +351,9 @@ class RoundProcessor:
     def end(self):
         """Demande le résultat de tout les matchs de la ronde actuelle"""
         input("Appuyez sur une entrée pour rentrer les résultats...\n")
-        for match in self.match_list:
+        for match in self._round.match_list:
             already_played = False
-            for result in self.results:
+            for result in self._round.results:
                 [name, score] = result
                 if name == match.player1.name or name == match.player2.name:
                     already_played = True
@@ -359,7 +361,8 @@ class RoundProcessor:
                 (result_1, result_2) = match.result()
                 if result_1 == -1:
                     return "exit"
-                self.results.append([match.player1.name, result_1])
-                self.results.append([match.player2.name, result_2])
-        self.round_.time_end = time.strftime("%H:%M")
-        print("Heure de fin de ronde : {}".format(self.time_end))
+                self._round.results.append([match.player1.name, result_1])
+                self._round.results.append([match.player2.name, result_2])
+        self._round.time_end = time.strftime("%H:%M")
+        print("Heure de fin de ronde : {}".format(self._round.time_end))
+        

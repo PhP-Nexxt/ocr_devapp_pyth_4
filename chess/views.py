@@ -15,7 +15,7 @@ class View:
         print(tournament.description, "\n" * 3)
         a_list = [
             "Afficher tous les joueurs par ordre alphabétique",
-            "- par classement",
+            "Afficher tous les joueurs par classement",
             "Afficher tous les tours",
             "Afficher tous les matchs",
         ]

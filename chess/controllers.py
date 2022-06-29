@@ -128,9 +128,9 @@ class Application:
                     "Combien de rondes voulez-vous ?"
                     " {} rondes possibles \n".format(possible_rounds_count)
                 )
-                # Nombre de tours du tournois     
+                # Nombre de tours du tournois
                 nb_round = int(nb_round) if nb_round.isdigit() else 4
-                
+
                 if nb_round > len(self._players) - 1 or nb_round < 0:
                     raise ValueError
                 name = str(input("Nom du tournois\n"))
@@ -142,20 +142,21 @@ class Application:
                 date = str(input("Date du tournois \n"))
                 if date == "":
                     raise ValueError
-                cadence = str(input\
-                    ("Cadence du tournois : Blitz / Bullet / Coup rapide\n"))
+                cadence = str(input("Cadence du tournois :\
+    Blitz / Bullet / Coup rapide\n"))
                 if cadence == "":
                     raise ValueError
                 description = str(input("Description du tournois\n"))
                 break
             except ValueError:
                 print("Réponse non valide")
-        # Test n/bre joueurs pair -1 si impair  
+        # Test n/bre joueurs pair -1 si impair
         if len(self._players) % 2:
-            players_test_pair = random.sample(self._players, len(self._players))[:-1]
+            players_test_pair = random.sample(self._players,
+                                              len(self._players))[:-1]
         else:
             players_test_pair = self._players
-               
+
         tournament = Tournament(
             name,
             place,
@@ -269,7 +270,7 @@ class Application:
             print("Mauvais choix ")
         else:
             tournament_processor.process()
-            
+
     def _load_players(self):
         """Charge tout les joueurs vers la liste "players"
         depuis la base de données."""

@@ -8,10 +8,10 @@ class TournamentProcessor:
     def __init__(self, controller, tournament):
         self._controller = controller
         self._tournament = tournament
-        
+
         if self._tournament.turn > 1:
             self._reload_tournament()
-            
+
     def _reload_tournament(self):
         for round_ in self._tournament.rounds:
             for result in round_.results:
@@ -47,7 +47,7 @@ class TournamentProcessor:
         # Si c'est la première ronde, on divise en deux groupes, on apparie
         name = f"Ronde {self._tournament.turn}"
         if self._tournament.turn == 1:
-            
+
             round0 = Round(round_name=name, match_list=[], results=[])
             round_processor = RoundProcessor(round0)
             round_processor.start()
@@ -87,7 +87,7 @@ class TournamentProcessor:
             roundx = Round(round_name=name, match_list=[], results=[])
             round_processor = RoundProcessor(roundx)
             round_processor.start()
-            
+
             self._tournament.players = sorted(
                 self._tournament.players,
                 key=attrgetter("score", "ranking"),
@@ -160,7 +160,7 @@ class TournamentProcessor:
             # On ajoute la ronde au tournois
             self._tournament.rounds.append(roundx)
             round_processor.end()
-            
+
     def display_opponents(self, player1, player2):
         print(
             "{:^11s} {:<11s}     s'oppose à {:^11s} {:<11s}".format(
@@ -226,14 +226,14 @@ class TournamentProcessor:
         ):
             self.switzerland()
 
-            self._tournament.turn += 1 #Increnetation du tour suivant
-            
+            self._tournament.turn += 1  # Incrementation du tour suivant
+
             if self._tournament.turn > self._tournament.round_count:
                 return
-            
+
             # On affiche le tableau des scores
             self.rounds_score()
-            
+
             # Nombre d'appariements max pour un nombre de personne
             # Pour 4 : (4*3)/2 = 6 couples possibles
             if (
@@ -243,7 +243,7 @@ class TournamentProcessor:
                 break
 
             shall_exit = input("Voulez-vous continuer ? (O/N)\n")
-            if shall_exit.lower() == "n":   
+            if shall_exit.lower() == "n":
                 self._controller.del_tournament(self._tournament)
                 self.save_tournament()
                 raise SystemExit(0)  # Not good
@@ -365,4 +365,3 @@ class RoundProcessor:
                 self._round.results.append([match.player2.name, result_2])
         self._round.time_end = time.strftime("%H:%M")
         print("Heure de fin de ronde : {}".format(self._round.time_end))
-        

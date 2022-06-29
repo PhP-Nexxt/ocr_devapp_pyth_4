@@ -1,6 +1,4 @@
 import sys
-
-
 from chess.controllers import Application
 
 

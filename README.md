@@ -5,4 +5,4 @@ Code source projet 4 Openclassroom
 
 1- Pour executer le programme, créez et activez un environnement virtuel, puis installez les paquets contenus dams le fichier requirements.txt
 
-2- Mode d'execution : Lancer le script en utilisant la commande `python3 main.py`
+2- Mode d'execution : Lancer le script en utilisant la commande `python3 main.py` et la commande `base_de_donnée_de_votre choix.json`
